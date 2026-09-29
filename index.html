@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Analisis Spasial dan Web GIS Rumah Sakit Kota Binjai</title>
+<meta name="description" content="Web GIS interaktif untuk visualisasi distribusi dan aksesibilitas rumah sakit di Kota Binjai berdasarkan hasil analisis spasial.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Analisis Spasial dan Web GIS Rumah Sakit Kota Binjai">
+<meta property="og:description" content="Web GIS interaktif untuk visualisasi distribusi dan aksesibilitas rumah sakit di Kota Binjai berdasarkan hasil analisis spasial.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div id="app">
+<header>
+  <button id="menuBtn" aria-label="Buka atau tutup sidebar">☰</button>
+  <div class="ttl"><b>Spatial Analysis and Interactive Web GIS</b><span>Hospital Distribution and Accessibility in Binjai City · Binjai City, North Sumatra</span></div>
+  <nav id="nav"><a href="#sec-overview">Home</a><a href="#map" data-map>Map</a><a href="#sec-dist">Analysis</a><a href="#sec-method">Method</a><a href="#sec-data">Data</a><a href="#sec-about">About</a></nav>
+</header>
+<div id="main">
+<aside id="sidebar">
+  <nav class="mnav"><a href="#sec-overview">Home</a><a href="#map" data-map>Map</a><a href="#sec-dist">Analysis</a><a href="#sec-method">Method</a><a href="#sec-data">Data</a><a href="#sec-about">About</a></nav>
+
+  <section id="sec-overview" class="card">
+    <h2>Overview</h2>
+    <p class="id-title">Analisis Spasial dan Web GIS Interaktif untuk Pemetaan Distribusi dan Aksesibilitas Rumah Sakit di Kota Binjai</p>
+    <p>Web GIS ini menampilkan hasil analisis spasial yang telah dikerjakan di QGIS: pola distribusi rumah sakit (Nearest Neighbor Analysis) dan zona keterjangkauan berdasarkan jarak buffer jaringan jalan.</p>
+    <div class="tiles">
+      <div><b data-s="hospitals">–</b><span>Total rumah sakit</span></div>
+      <div><b data-s="total">–</b><span>Total building</span></div>
+      <div><b data-s="acc">–</b><span>Building terjangkau</span></div>
+      <div><b data-s="inacc">–</b><span>Building tidak terjangkau</span></div>
+    </div>
+  </section>
+
+  <section id="sec-layers" class="card">
+    <h2>Layer Peta</h2>
+    <div id="layerList"></div>
+    <p class="note">Basemap dipilih melalui Layer Control di pojok kanan atas peta. Building footprint tampil mulai zoom 14.</p>
+  </section>
+
+  <section id="sec-dist" class="card">
+    <h2>Distribusi Rumah Sakit</h2>
+    <h3>Analisis Distribusi Rumah Sakit (Nearest Neighbor Analysis)</h3>
+    <dl class="kv">
+      <dt>Observed Mean Distance</dt><dd data-n="observedMeanDistance"></dd>
+      <dt>Expected Mean Distance</dt><dd data-n="expectedMeanDistance"></dd>
+      <dt>Nearest Neighbor Ratio</dt><dd data-n="nearestNeighborRatio"></dd>
+      <dt>Z-Score</dt><dd data-n="zScore"></dd>
+      <dt>Pola Distribusi</dt><dd data-n="pattern"></dd>
+    </dl>
+    <ul class="note">
+      <li><b>Menyebar:</b> lokasi rumah sakit cenderung memiliki pola penyebaran yang lebih teratur.</li>
+      <li><b>Mengelompok:</b> lokasi rumah sakit cenderung terkonsentrasi pada lokasi tertentu.</li>
+      <li><b>Acak:</b> distribusi titik tidak menunjukkan pola pengelompokan maupun penyebaran yang signifikan.</li>
+    </ul>
+  </section>
+
+  <section id="sec-akses" class="card">
+    <h2>Aksesibilitas</h2>
+    <h3>Aksesibilitas Rumah Sakit</h3>
+    <dl class="kv"><dt>Metode</dt><dd>Buffer Analysis</dd><dt>Basis</dt><dd>Jaringan Jalan BIG</dd><dt>Kelas</dt><dd>0–1 km, &gt;1–2 km, &gt;2–3 km</dd></dl>
+    <p class="note">Keterjangkauan dalam penelitian ini didefinisikan berdasarkan jarak buffer hasil analisis spasial dengan menggunakan data jaringan jalan. Hasil ini tidak merepresentasikan waktu tempuh perjalanan.</p>
+  </section>
+
+  <section id="sec-bcov" class="card">
+    <h2>Building Coverage</h2>
+    <div class="tiles">
+      <div><b data-s="total">–</b><span>Total building</span></div>
+      <div><b data-s="acc">–</b><span>Terjangkau</span></div>
+      <div><b data-s="inacc">–</b><span>Tidak terjangkau</span></div>
+      <div><b data-s="pa">–</b><span>% terjangkau</span></div>
+      <div><b data-s="pi">–</b><span>% tidak terjangkau</span></div>
+    </div>
+    <div class="tbl"><table><thead><tr><th>Zona Keterjangkauan</th><th>Jumlah Building</th><th>Persentase</th></tr></thead><tbody id="zoneBody"></tbody></table></div>
+    <div class="chartbox"><canvas id="chart"></canvas></div>
+    <p class="note" id="statSrc"></p>
+  </section>
+
+  <section id="sec-method" class="card">
+    <h2>Metodologi Penelitian</h2>
+    <ol class="flow">
+      <li>Data spasial</li><li>Preprocessing data di QGIS</li><li>Pemetaan lokasi rumah sakit</li><li>Nearest Neighbor Analysis</li>
+      <li>Buffer Analysis berbasis jaringan jalan</li><li>Overlay buffer dengan building footprint</li><li>Klasifikasi building</li><li>Statistik building</li><li>Visualisasi Web GIS</li>
+    </ol>
+    <p><b>QGIS</b> melakukan analisis spasial. <b>Web GIS</b> melakukan visualisasi dan diseminasi.</p>
+  </section>
+
+  <section id="sec-data" class="card">
+    <h2>Data</h2>
+    <div class="tbl"><table><thead><tr><th>Data</th><th>Sumber</th><th>Geometry</th><th>Fungsi</th></tr></thead><tbody>
+      <tr><td>Batas Administrasi</td><td>BIG</td><td>Polygon</td><td>Wilayah analisis</td></tr>
+      <tr><td>Rumah Sakit</td><td>SIRS Kemenkes + plotting Google Maps</td><td>Point</td><td>Lokasi rumah sakit</td></tr>
+      <tr><td>Jaringan Jalan</td><td>BIG</td><td>Line</td><td>Basis analisis/visualisasi jaringan jalan</td></tr>
+      <tr><td>Sungai</td><td>Data penelitian</td><td>Line</td><td>Visualisasi unsur hidrologi</td></tr>
+      <tr><td>Building Footprint</td><td>Google Open Buildings</td><td>Polygon</td><td>Analisis dan visualisasi building</td></tr>
+      <tr><td>Zona Buffer</td><td>Hasil analisis QGIS</td><td>Polygon</td><td>Visualisasi zona keterjangkauan</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section id="sec-about" class="card">
+    <h2>Tentang</h2>
+    <dl class="kv"><dt>Judul</dt><dd>Analisis Spasial dan Web GIS Interaktif untuk Pemetaan Distribusi dan Aksesibilitas Rumah Sakit di Kota Binjai</dd><dt>Lokasi</dt><dd>Kota Binjai, Sumatera Utara</dd><dt>Metode</dt><dd>Nearest Neighbor Analysis; Buffer Analysis berbasis jaringan jalan; overlay dengan building footprint</dd><dt>Teknologi</dt><dd>HTML5, CSS3, JavaScript, Leaflet.js, GeoJSON, Chart.js, GitHub Pages</dd></dl>
+    <p>Web GIS ini dikembangkan sebagai media visualisasi dan diseminasi hasil analisis spasial mengenai distribusi dan aksesibilitas rumah sakit di Kota Binjai.</p>
+    <div class="disclaimer">
+      <p>Web GIS ini merupakan media visualisasi hasil analisis spasial penelitian.</p>
+      <p>Keterjangkauan rumah sakit dalam penelitian ini didefinisikan berdasarkan jarak buffer hasil analisis spasial dengan menggunakan data jaringan jalan, bukan waktu tempuh perjalanan.</p>
+      <p>Zona 0–1 km, &gt;1–2 km, dan &gt;2–3 km merupakan kelas analisis penelitian dan bukan klaim sebagai radius pelayanan resmi rumah sakit.</p>
+      <p>Building footprint merepresentasikan keberadaan bangunan dan tidak secara langsung merepresentasikan jumlah penduduk.</p>
+    </div>
+  </section>
+</aside>
+<div id="mapwrap"><div id="map"></div><div id="bHint" hidden>Tingkatkan zoom untuk melihat building footprint.</div><div id="toast"></div></div>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="./script.js"></script>
+</body>
+</html>
