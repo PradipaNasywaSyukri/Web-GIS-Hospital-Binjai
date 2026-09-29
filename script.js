@@ -83,7 +83,7 @@ function hospitalPopup(p) {
   return `<div class="pop"><h3>${g('Nama')}</h3>
     <p><b>Kecamatan:</b><br>${g('Kecamatan')}</p><p><b>Alamat:</b><br>${g('Alamat')}</p>
     <p><b>Jenis RS:</b><br>${g('Jenis RS')}</p><p><b>Kelas RS:</b><br>${g('Kelas RS')}</p>
-    <p><b>Kepemilikan:</b><br>${g('Kepemilikan')}</p>
+    <p><b>Kepemilikan:</b><br>${g('Kepemilika')}</p>
     <p><b>Koordinat:</b><br>Y: ${g('Y')}<br>X: ${g('X')}</p>
     ${link('Profil Rumah Sakit', p['Link Profi'])}${link('Buka Google Maps', p['Link Gmaps'])}</div>`;
 }
