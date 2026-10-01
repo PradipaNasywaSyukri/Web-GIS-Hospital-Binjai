@@ -20,7 +20,7 @@ const CONFIG = {
     buffer23: "./data/buffer_2_3km.geojson"
   },
   research: {
-    nna: { observedMeanDistance: 1058.43419295521, expectedMeanDistance: 708.25741346653, nearestNeighborRatio: 1.49442021055, zScore: 2.99107358921, pattern: "Menyebar" },
+    nna: { observedMeanDistance: 1058.0513, expectedMeanDistance: 1531.0950, nearestNeighborRatio: 0.691042, zScore: -1.869089, pValue: 0.061610, pattern: "Mengelompok" },
     buildings: {
       total: null, accessible: null, inaccessible: null,
       accessiblePercentage: null, inaccessiblePercentage: null,
